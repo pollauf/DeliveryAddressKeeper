@@ -52,7 +52,7 @@
             </q-item-section>
           </q-item>
 
-          <q-item v-ripple clickable>
+          <q-item to="/" v-ripple clickable>
             <q-item-section avatar>
               <q-icon color="grey-10" name="home" />
             </q-item-section>
@@ -76,6 +76,8 @@
               <q-item
                 v-for="(child, key2) in menu.children"
                 :key="key2"
+                :to="child.route"
+                exact
                 v-ripple
                 clickable
               >
@@ -114,7 +116,7 @@ export default {
           label: "Cadastros",
           icon: "create",
           children: [
-            { label: "Usuário", icon: "person", route: "" },
+            { label: "Usuário", icon: "person", route: "/cadUsuario" },
             { label: "Cliente", icon: "person_pin_circle", route: "" },
           ],
         },
