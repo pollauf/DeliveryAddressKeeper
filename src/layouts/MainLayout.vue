@@ -52,12 +52,12 @@
             </q-item-section>
           </q-item>
 
-          <q-item to="/" v-ripple clickable>
+          <q-item to="/" active-class="menu-active" v-ripple clickable>
             <q-item-section avatar>
-              <q-icon color="grey-10" name="home" />
+              <q-icon name="home" />
             </q-item-section>
             <q-item-section>
-              <q-item-label class="text-grey-10">Início</q-item-label>
+              <q-item-label>Início</q-item-label>
             </q-item-section>
           </q-item>
           <!-- /TÓPICO -->
@@ -68,24 +68,25 @@
             :key="key"
             :icon="menu.icon"
             :label="menu.label"
-            header-class="text-grey-10"
             class="q-pt-sm"
             clickable
+            exact
           >
             <div class="q-pl-md">
               <q-item
                 v-for="(child, key2) in menu.children"
                 :key="key2"
                 :to="child.route"
+                active-class="menu-active"
                 exact
                 v-ripple
                 clickable
               >
                 <q-item-section avatar>
-                  <q-icon color="grey-10" :name="child.icon" />
+                  <q-icon :name="child.icon" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label class="text-grey-10">
+                  <q-item-label>
                     {{ child.label }}
                   </q-item-label>
                 </q-item-section>
@@ -124,7 +125,7 @@ export default {
           label: "Consultas",
           icon: "manage_search",
           children: [
-            { label: "Usuário", icon: "person", route: "" },
+            { label: "Usuário", icon: "person", route: "/conUsuario" },
             { label: "Cliente", icon: "person_pin_circle", route: "" },
           ],
         },

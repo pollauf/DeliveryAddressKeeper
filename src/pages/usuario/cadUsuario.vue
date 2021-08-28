@@ -1,7 +1,7 @@
 <template>
   <q-page class="row">
     <div class="col-12 col-md-6 offset-md-3 q-pt-lg">
-      <q-card width="100%" flat bordered class="my-card bg-grey-1">
+      <q-card width="100%" flat bordered class="my-card bg-transparent">
         <q-card-section>
           <div class="row items-center no-wrap">
             <div class="col-12 text-center">
@@ -15,7 +15,7 @@
             <q-input
               class="col-12 col-md-12"
               outlined
-              v-model="nome"
+              v-model="model.nome"
               label="Nome"
               lazy-rules
               :rules="[(val) => (val && val.length > 0) || 'Preencha o Nome!']"
@@ -23,7 +23,7 @@
             <q-input
               class="col-12 col-md-6"
               outlined
-              v-model="login"
+              v-model="model.login"
               label="Login"
               lazy-rules
               :rules="[
@@ -33,7 +33,7 @@
             <q-input
               class="col-12 col-md-5 offset-md-1"
               outlined
-              v-model="senha"
+              v-model="model.senha"
               :type="isPwd ? 'password' : 'text'"
               label="Senha"
               lazy-rules
@@ -58,7 +58,7 @@
                 :disabled="loading"
                 type="submit"
                 color="primary"
-                >Cadastrar</q-btn
+                >Salvar</q-btn
               >
             </div>
           </q-form>
@@ -74,45 +74,46 @@ import { defineComponent } from "vue";
 import { api } from "boot/axios";
 
 export default defineComponent({
-  name: "PageIndex",
+  name: "cadUsuario",
 
   data: function () {
     return {
-      nome: "",
-      login: "",
-      senha: "",
+      model: {
+        nome: "",
+        login: "",
+        senha: "",
+      },
+      originalModel: "",
       isPwd: true,
       loading: false,
     };
+  },
+
+  created() {
+    this.originalModel = JSON.stringify(this.model);
   },
 
   methods: {
     onSubmit() {
       this.loading = true;
 
-      api
-        .post("/user/register", {
-          nome: this.nome,
-          login: this.login,
-          senha: this.senha,
-        })
-        .then((response) => {
-          this.$q.notify({
-            type: response.data.ok ? "positive" : "negative",
-            position: "bottom",
-            message: response.data.msg,
-            timeout: 2300,
-          });
-
-          setTimeout(() => {
-            if (response.data.ok) {
-              this.nome = this.login = this.senha = "";
-              this.$refs.form.resetValidation();
-            }
-
-            this.loading = false;
-          }, 2500);
+      api.post("/user/register", this.model).then((response) => {
+        this.$q.notify({
+          type: response.data.ok ? "positive" : "negative",
+          position: "bottom",
+          message: response.data.msg,
+          timeout: 2300,
         });
+
+        setTimeout(() => {
+          if (response.data.ok) {
+            this.model = JSON.parse(this.originalModel);
+            this.$refs.form.resetValidation();
+          }
+
+          this.loading = false;
+        }, 2500);
+      });
     },
   },
 });
