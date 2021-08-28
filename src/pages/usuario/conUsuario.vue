@@ -13,6 +13,7 @@
         <q-card-section>
           <q-table
             title=""
+            :filter="filter"
             :loading="loading"
             no-data-label="Nenhum registro encontrado"
             :rows="rows"
@@ -21,14 +22,22 @@
             v-model:pagination="pagination"
             hide-pagination
           >
-            <template v-slot:no-data="{ icon, filter }">
+            <template v-slot:top-right>
+              <q-input
+                borderless
+                dense
+                debounce="300"
+                v-model="filter"
+                placeholder="Pesquise"
+                outlined
+              >
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
+            <template v-slot:no-data="">
               <div class="full-width row flex-center text-accent q-gutter-sm">
-                <q-icon
-                  v-show="!loading"
-                  color="grey-10"
-                  size="2em"
-                  :name="filter ? 'filter_b_and_w' : icon"
-                />
                 <span v-show="!loading" class="text-grey-10">
                   Nenhum registro encontrado
                 </span>
@@ -65,6 +74,7 @@ export default defineComponent({
     return {
       rows: [],
       loading: false,
+      filter: "",
     };
   },
 
@@ -86,7 +96,7 @@ export default defineComponent({
 
           this.loading = false;
         });
-      }, 5000);
+      }, 500);
     },
   },
 
