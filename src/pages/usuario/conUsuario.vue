@@ -19,8 +19,7 @@
             :rows="rows"
             :columns="columns"
             row-key="index"
-            v-model:pagination="pagination"
-            hide-pagination
+            :pagination="pagination"
           >
             <template v-slot:top-right>
               <q-input
@@ -47,15 +46,6 @@
               </div>
             </template>
           </q-table>
-
-          <div class="row justify-center q-mt-md">
-            <q-pagination
-              v-model="pagination.page"
-              color="grey-8"
-              :max="pagesNumber"
-              size="sm"
-            />
-          </div>
         </q-card-section>
       </q-card>
     </div>
@@ -100,19 +90,12 @@ export default defineComponent({
     },
   },
 
-  computed: {
-    pagesNumber() {
-      return Math.ceil(this.rows.length / this.pagination.rowsPerPage);
-    },
-  },
-
   setup() {
     const pagination = ref({
       sortBy: "desc",
       descending: false,
       page: 1,
       rowsPerPage: 5,
-      loading: false,
     });
 
     const columns = [

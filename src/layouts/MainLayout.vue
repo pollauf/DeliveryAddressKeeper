@@ -14,7 +14,7 @@
         <!-- <q-separator vertical spaced dark /> -->
 
         <q-toolbar-title class="q-pt-sm">
-          <span class="zaikoLogo text-h4">Zaiko</span>
+          <span class="zaikoLogo text-h4">{P}</span>
           <span
             class="text-subtitle1 text-bold q-ml-sm desktop-only"
             style="font-family: Helvetica"
@@ -118,7 +118,11 @@ export default {
           icon: "create",
           children: [
             { label: "Usuário", icon: "person", route: "/cadUsuario" },
-            { label: "Cliente", icon: "person_pin_circle", route: "" },
+            {
+              label: "Cliente",
+              icon: "person_pin_circle",
+              route: "/cadCliente",
+            },
           ],
         },
         Consultas: {

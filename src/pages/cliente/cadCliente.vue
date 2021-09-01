@@ -1,7 +1,7 @@
 <template>
   <q-page class="row">
-    <div class="col-12 col-md-6 offset-md-3 q-pt-lg">
-      <CadUsuario />
+    <div class="col-12 col-md-8 offset-md-2 q-pt-lg">
+      <CadCliente />
     </div>
   </q-page>
 </template>
@@ -9,12 +9,12 @@
 <script>
 import { defineComponent } from "vue";
 
-import CadUsuario from "src/components/cadastros/CadUsuario.vue";
+import CadCliente from "src/components/cadastros/CadCliente.vue";
 
 import { api } from "boot/axios";
 
 export default defineComponent({
-  name: "cadUsuario",
+  name: "cadCliente",
 
   data: function () {
     return {};
@@ -23,7 +23,7 @@ export default defineComponent({
   methods: {},
 
   components: {
-    CadUsuario,
+    CadCliente,
   },
 });
 </script>
