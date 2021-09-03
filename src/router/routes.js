@@ -28,6 +28,13 @@ const routes = [
       { path: '', component: () => import('pages/cliente/cadCliente.vue') }
     ]
   },
+  {
+    path: '/cadastro',
+    component: () => import('layouts/ExtLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/cliente/cadClienteExt.vue') }
+    ]
+  },
 
   // Always leave this as last one,
   // but you can also remove it

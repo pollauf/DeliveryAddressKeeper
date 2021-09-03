@@ -52,7 +52,13 @@
             </q-item-section>
           </q-item>
 
-          <q-item to="/" active-class="menu-active" v-ripple clickable>
+          <q-item
+            to="/"
+            @click="toggleLeftDrawerIfMobile"
+            active-class="menu-active"
+            v-ripple
+            clickable
+          >
             <q-item-section avatar>
               <q-icon name="home" />
             </q-item-section>
@@ -77,6 +83,7 @@
                 v-for="(child, key2) in menu.children"
                 :key="key2"
                 :to="child.route"
+                @click="toggleLeftDrawerIfMobile"
                 active-class="menu-active"
                 exact
                 v-ripple
@@ -105,6 +112,7 @@
 </template>
 
 <script>
+import { useQuasar } from "quasar";
 import { ref } from "vue";
 
 export default {
@@ -138,12 +146,16 @@ export default {
   },
 
   setup() {
+    const $q = useQuasar();
     const leftDrawerOpen = ref(false);
 
     return {
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
+      },
+      toggleLeftDrawerIfMobile() {
+        if ($q.platform.is.mobile) leftDrawerOpen.value = !leftDrawerOpen.value;
       },
     };
   },

@@ -11,14 +11,6 @@
     <q-card-section>
       <q-form ref="form" @submit="onSubmit" class="row q-col-gutter-sm">
         <q-input
-          class="col-12 col-sm-8"
-          outlined
-          v-model="model.nome"
-          label="Nome"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Preencha o Nome!']"
-        />
-        <q-input
           class="col-12 col-sm-4"
           outlined
           v-model="model.celular"
@@ -28,6 +20,14 @@
           "
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Preencha o Celular!']"
+        />
+        <q-input
+          class="col-12 col-sm-8"
+          outlined
+          v-model="model.nome"
+          label="Nome"
+          lazy-rules
+          :rules="[(val) => (val && val.length > 0) || 'Preencha o Nome!']"
         />
         <q-input
           class="col-12"
@@ -42,7 +42,7 @@
           outlined
           v-model="model.numero"
           label="Número"
-          mask="#####"
+          mask="##########"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Preencha o Número!']"
         />
@@ -52,12 +52,18 @@
           v-model="model.complemento"
           label="Complemento"
           lazy-rules
-          :rules="[
-            (val) => (val && val.length > 0) || 'Preencha o Complemento!',
-          ]"
+          :rules="[(val) => true || 'Preencha o Bairro!']"
         />
         <q-input
-          class="col-6"
+          class="col-12 col-sm-5"
+          outlined
+          v-model="model.bairro"
+          label="Bairro"
+          lazy-rules
+          :rules="[(val) => (val && val.length > 0) || 'Preencha o Bairro!']"
+        />
+        <q-input
+          class="col-6 col-sm-5"
           outlined
           v-model="model.cidade"
           label="Cidade"
@@ -65,7 +71,7 @@
           :rules="[(val) => (val && val.length > 0) || 'Preencha a Cidade!']"
         />
         <q-input
-          class="col-3 col-sm-2"
+          class="col-6 col-sm-2"
           outlined
           v-model="model.estado"
           label="UF"
@@ -98,6 +104,13 @@ import { api } from "boot/axios";
 export default defineComponent({
   name: "CadCliente",
 
+  props: {
+    titulo: {
+      type: String,
+      default: "CADASTRO DE CLIENTE",
+    },
+  },
+
   data: function () {
     return {
       model: {
@@ -107,6 +120,7 @@ export default defineComponent({
         endereco: "",
         numero: "",
         complemento: "",
+        bairro: "",
         cidade: "Jaraguá do Sul",
         estado: "SC",
         origem: 0,
@@ -148,7 +162,7 @@ export default defineComponent({
   computed: {
     formTitle() {
       if (this.model.id == 0) {
-        return "CADASTRO DE CLIENTE";
+        return this.titulo;
       } else {
         return "EDIÇÃO DE CLIENTE";
       }
