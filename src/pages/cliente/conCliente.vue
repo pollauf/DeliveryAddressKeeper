@@ -5,7 +5,7 @@
         <q-card-section>
           <div class="row items-center no-wrap">
             <div class="col-12 text-center">
-              <div class="text-h6 text-bold">CONSULTA DE USUÁRIOS</div>
+              <div class="text-h6 text-bold">CONSULTA DE CLIENTES</div>
             </div>
           </div>
         </q-card-section>
@@ -58,7 +58,7 @@ import { defineComponent, ref } from "vue";
 import { api } from "boot/axios";
 
 export default defineComponent({
-  name: "conUsuario",
+  name: "conCliente",
 
   data: function () {
     return {
@@ -77,7 +77,7 @@ export default defineComponent({
       this.loading = true;
 
       setTimeout(() => {
-        api.get("/users").then((result) => {
+        api.get("/deliverycustomers").then((result) => {
           this.rows = result.data;
 
           this.rows.forEach((row, index) => {
@@ -115,10 +115,60 @@ export default defineComponent({
         sortable: true,
       },
       {
-        name: "login",
-        label: "Login",
+        name: "celular",
+        label: "Celular",
         align: "left",
-        field: "login",
+        field: "celular",
+        sortable: true,
+      },
+      {
+        name: "endereco",
+        label: "Rua",
+        align: "left",
+        field: "endereco",
+        sortable: true,
+      },
+      {
+        name: "numero",
+        label: "Número",
+        align: "left",
+        field: "numero",
+        sortable: true,
+      },
+      {
+        name: "complemento",
+        label: "Complemento",
+        align: "left",
+        field: "complemento",
+        sortable: true,
+      },
+      {
+        name: "bairro",
+        label: "Bairro",
+        align: "left",
+        field: "bairro",
+        sortable: true,
+      },
+      {
+        name: "cidade",
+        label: "Cidade",
+        align: "left",
+        field: "cidade",
+        sortable: true,
+      },
+      {
+        name: "estado",
+        label: "UF",
+        align: "left",
+        field: "estado",
+        sortable: true,
+      },
+      {
+        name: "origem",
+        label: "Origem",
+        align: "left",
+        field: "origem",
+        format: (val) => (val == 0 ? "Interna" : "Externa"),
         sortable: true,
       },
     ];

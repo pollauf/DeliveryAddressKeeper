@@ -95,7 +95,9 @@ module.exports = configure(function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'LocalStorage',
+        'SessionStorage'
       ]
     },
 
@@ -140,8 +142,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `DAKeeper`,
-        short_name: `DAKeeper`,
+        name: `GEC - Gerenciador de Endereços de Clientes`,
+        short_name: `GED`,
         description: `Control of customer delivery addresses for restaurants`,
         display: 'standalone',
         orientation: 'portrait',

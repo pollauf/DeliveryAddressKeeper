@@ -1,6 +1,8 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
+import { LocalStorage } from 'quasar'
+
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
 // If any client changes this (global) instance, it might be a
@@ -8,6 +10,56 @@ import axios from 'axios'
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({ baseURL: 'http://localhost/DeliveryAddressKeeperAPI/public' })
+
+// Interceptos
+
+api.interceptors.response.use(
+  response => {
+
+    // Do something with response data
+
+    return response
+  },
+  error => {
+
+    // Do something with response error
+
+    // You can even test for a response code
+    // and try a new request before rejecting the promise
+
+    if (
+      error.request._hasError === true &&
+      error.request._response.includes('connect')
+    ) {
+    }
+
+    if (error.response.status === 401) {
+      const requestConfig = error.config
+
+      // O token JWT expirou
+      LocalStorage.clear();
+      window.location.reload();
+
+      return axios(requestConfig)
+    }
+
+    return Promise.reject(error)
+  },
+)
+
+api.interceptors.request.use(
+    config => {
+      let token = LocalStorage.getItem('token');
+
+      if (token != null)
+        config.headers.Authorization = `Bearer ${token}`;
+
+      return Promise.resolve(config)
+    },
+    error => {
+      return Promise.reject(error)
+    },
+  )
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api

@@ -29,10 +29,24 @@ const routes = [
     ]
   },
   {
-    path: '/cadastro',
+    path: '/conCliente',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/cliente/conCliente.vue') }
+    ]
+  },
+  {
+    path: '/cadastro-cliente',
     component: () => import('layouts/ExtLayout.vue'),
     children: [
       { path: '', component: () => import('pages/cliente/cadClienteExt.vue') }
+    ]
+  },
+  {
+    path: '/login',
+    component: () => import('layouts/MainLayoutSimple.vue'),
+    children: [
+      { path: '', component: () => import('pages/login/login.vue') }
     ]
   },
 

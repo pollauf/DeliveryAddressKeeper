@@ -19,13 +19,27 @@
             class="text-subtitle1 text-bold q-ml-sm desktop-only"
             style="font-family: Helvetica"
           >
-            Controle de Endereços para Delivery
+            GEC - Gerenciador de Endereços de Clientes
           </span>
         </q-toolbar-title>
 
         <q-btn flat icon="notifications">
-          <q-badge color="red" floating>4</q-badge>
+          <!-- <q-badge color="red" floating>4</q-badge> -->
         </q-btn>
+        <q-btn-dropdown flat icon="account_circle">
+          <q-list>
+            <q-item clickable v-close-popup>
+              <q-item-section>
+                <q-item-label>Alterar senha</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item @click="logout" clickable v-close-popup>
+              <q-item-section>
+                <q-item-label>Sair</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
 
@@ -138,11 +152,31 @@ export default {
           icon: "manage_search",
           children: [
             { label: "Usuário", icon: "person", route: "/conUsuario" },
-            { label: "Cliente", icon: "person_pin_circle", route: "" },
+            {
+              label: "Cliente",
+              icon: "person_pin_circle",
+              route: "/conCliente",
+            },
           ],
         },
       },
     };
+  },
+
+  methods: {
+    logout() {
+      this.$q.notify({
+        type: "warning",
+        position: "bottom",
+        message: "Saindo",
+        timeout: 1200,
+      });
+
+      setTimeout(() => {
+        this.$q.localStorage.clear();
+        this.$router.push({ path: "/login" });
+      }, 1000);
+    },
   },
 
   setup() {
