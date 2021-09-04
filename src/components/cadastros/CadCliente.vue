@@ -9,7 +9,21 @@
     </q-card-section>
 
     <q-card-section>
-      <q-form ref="form" @submit="onSubmit" class="row q-col-gutter-sm">
+      <q-banner
+        v-show="bannerSucesso"
+        class="bg-positive text-white text-center"
+      >
+        <template v-slot:avatar>
+          <q-icon name="done" color="white" />
+        </template>
+        <span class="text-h6">Cadastro realizado com sucesso!</span>
+      </q-banner>
+      <q-form
+        v-show="!bannerSucesso"
+        ref="form"
+        @submit="onSubmit"
+        class="row q-col-gutter-sm"
+      >
         <q-input
           class="col-12 col-sm-4"
           outlined
@@ -109,6 +123,14 @@ export default defineComponent({
       type: String,
       default: "CADASTRO DE CLIENTE",
     },
+    origem: {
+      type: Number,
+      default: 0,
+    },
+    exibirBannerSucesso: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data: function () {
@@ -123,11 +145,12 @@ export default defineComponent({
         bairro: "",
         cidade: "Jaraguá do Sul",
         estado: "SC",
-        origem: 0,
+        origem: this.origem,
       },
       originalModel: "",
       isPwd: true,
       loading: false,
+      bannerSucesso: false,
     };
   },
 
@@ -140,12 +163,18 @@ export default defineComponent({
       this.loading = true;
 
       api.post("/deliverycustomer/register", this.model).then((response) => {
-        this.$q.notify({
-          type: response.data.ok ? "positive" : "negative",
-          position: "bottom",
-          message: response.data.msg,
-          timeout: 2300,
-        });
+        if (response.data.ok) {
+          if (this.exibirBannerSucesso) {
+            this.bannerSucesso = true;
+          } else {
+            this.$q.notify({
+              type: response.data.ok ? "positive" : "negative",
+              position: "bottom",
+              message: response.data.msg,
+              timeout: 2300,
+            });
+          }
+        }
 
         setTimeout(() => {
           if (response.data.ok) {

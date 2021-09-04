@@ -1,7 +1,7 @@
 <template>
   <q-page class="row">
     <div class="col-12 col-md-6 offset-md-3 q-pt-lg">
-      <CadCliente titulo="CADASTRO" />
+      <CadCliente titulo="CADASTRO" :exibirBannerSucesso="true" :origem="1" />
     </div>
   </q-page>
 </template>
