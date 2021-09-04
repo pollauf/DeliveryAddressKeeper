@@ -26,6 +26,9 @@
         </q-input>
       </q-form>
       <br />
+      <div v-show="nadaEncontrado" class="text-h6 text-center q-pb-md">
+        Nenhum registro encontrado
+      </div>
       <q-list v-show="model.id != 0 && !loading" bordered>
         <q-item>
           <q-item-section avatar>
@@ -87,6 +90,7 @@ export default defineComponent({
         estado: "",
         origem: 0,
       },
+      nadaEncontrado: false,
     };
   },
 
@@ -95,6 +99,8 @@ export default defineComponent({
       if (this.celular.length < 14) {
         return;
       }
+
+      this.nadaEncontrado = false;
 
       this.loading = true;
 
@@ -117,6 +123,7 @@ export default defineComponent({
               };
             } else {
               this.model.id = 0;
+              this.nadaEncontrado = true;
             }
 
             this.loading = false;

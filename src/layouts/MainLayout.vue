@@ -23,9 +23,40 @@
           </span>
         </q-toolbar-title>
 
-        <q-btn flat icon="notifications">
-          <!-- <q-badge color="red" floating>4</q-badge> -->
-        </q-btn>
+        <q-btn-dropdown
+          dropdown-icon="notifications"
+          color="white"
+          flat
+          no-icon-animation
+        >
+          <template v-if="notificationsLength > 0" v-slot:label>
+            <q-badge color="red">
+              {{ notificationsLength }}
+            </q-badge>
+          </template>
+          <q-list class="non-selectable">
+            <q-item
+              v-for="(notification, key) in notifications"
+              :key="key"
+              clickable
+              v-close-popup
+            >
+              <q-item-section avatar>
+                <q-avatar icon="new_releases" size="4em" text-color="primary" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label> Um novo cliente se cadastrou! </q-item-label>
+                <q-item-label caption>
+                  {{ notification.nome + " | " + notification.celular }}
+                </q-item-label>
+                <q-item-label caption>
+                  {{ stringFromTimestamp(notification.created_at) }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+
         <q-btn-dropdown flat icon="account_circle">
           <q-list>
             <q-item clickable v-close-popup>
@@ -129,11 +160,23 @@
 import { useQuasar } from "quasar";
 import { ref } from "vue";
 
+import Formatters from "../js/formatters.js";
+
+import { api } from "boot/axios";
+
 export default {
   name: "MainLayout",
 
+  computed: {
+    notificationsLength() {
+      return this.notifications.length;
+    },
+  },
+
   data: function () {
     return {
+      notifications: [],
+      stringFromTimestamp: Formatters.formatStringFromTimestamp,
       menus: {
         Cadastros: {
           label: "Cadastros",
@@ -163,7 +206,41 @@ export default {
     };
   },
 
+  created() {
+    this.getNotifications();
+
+    setInterval(() => {
+      this.getNotifications(true);
+    }, 10000);
+  },
+
   methods: {
+    getNotifications(compare = false) {
+      api.get("/notification/status/0").then((response) => {
+        if (compare) {
+          let newNotifications = [];
+          newNotifications = response.data.map((notification) => {
+            if (!this.notifications.includes(notification)) return notification;
+          });
+
+          if (newNotifications.length > 0) {
+            let msg = "Um novo cliente se cadastrou!";
+
+            if (newNotifications.length > 1)
+              msg = `${newNotifications.length} novos clientes se cadastraram!`;
+
+            this.$q.notify({
+              type: "positive",
+              position: "bottom",
+              message: msg,
+              timeout: 2000,
+            });
+          }
+        }
+
+        this.notifications = response.data;
+      });
+    },
     logout() {
       this.$q.notify({
         type: "warning",
