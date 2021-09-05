@@ -8,35 +8,35 @@ const routes = [
     ]
   },
   {
-    path: '/cadUsuario',
+    path: '/cadastro-usuario',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/usuario/cadUsuario.vue') }
     ]
   },
   {
-    path: '/conUsuario',
+    path: '/consulta-usuarios',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/usuario/conUsuario.vue') }
     ]
   },
   {
-    path: '/cadCliente',
+    path: '/cadastro-cliente',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/cliente/cadCliente.vue') }
     ]
   },
   {
-    path: '/conCliente',
+    path: '/consulta-clientes',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/cliente/conCliente.vue') }
     ]
   },
   {
-    path: '/cadastro-cliente',
+    path: '/:tenantuser/cad-cliente',
     component: () => import('layouts/ExtLayout.vue'),
     children: [
       { path: '', component: () => import('pages/cliente/cadClienteExt.vue') }

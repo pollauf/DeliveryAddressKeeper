@@ -131,12 +131,17 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    tenantuser: {
+      type: String,
+      default: null,
+    },
   },
 
   data: function () {
     return {
       model: {
         id: 0,
+        tenant_user: null,
         nome: "",
         celular: "",
         endereco: "",
@@ -155,6 +160,7 @@ export default defineComponent({
   },
 
   created() {
+    this.model.tenant_user = this.tenantuser;
     this.originalModel = JSON.stringify(this.model);
   },
 

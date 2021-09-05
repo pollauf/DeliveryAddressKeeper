@@ -2,7 +2,7 @@
   "name": "dakeeper",
   "version": "0.0.1",
   "description": "Control of customer delivery addresses for restaurants",
-  "productName": "DAKeeper",
+  "productName": "GEC - Gerenciador de Endereços de Clientes",
   "author": "Pollauf",
   "private": true,
   "scripts": {

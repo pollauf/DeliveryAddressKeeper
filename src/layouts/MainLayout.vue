@@ -38,6 +38,7 @@
             <q-item
               v-for="(notification, key) in notifications"
               :key="key"
+              @click="clickNotification(notification)"
               clickable
               v-close-popup
             >
@@ -150,6 +151,23 @@
       </q-scroll-area>
     </q-drawer>
 
+    <q-dialog v-model="exibirModalConsultaRapida" persistent>
+      <q-card style="width: 700px; max-width: 95vw; min-height: 65vh">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-subtitle1 text-bold">CONSULTA RÁPIDA DE CLIENTE</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section>
+          <ConRapidaCliente
+            style="width: 100%; height: 100%"
+            :celularInicial="celularSelecionadoNotificacao"
+            :modoModal="true"
+          />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -164,17 +182,32 @@ import Formatters from "../js/formatters.js";
 
 import { api } from "boot/axios";
 
+import ConRapidaCliente from "components/consultas/ConRapidaCliente.vue";
+
 export default {
   name: "MainLayout",
+
+  components: {
+    ConRapidaCliente,
+  },
 
   computed: {
     notificationsLength() {
       return this.notifications.length;
     },
+    notificationsIds() {
+      let ids = this.notifications.map((notification) => {
+        return notification.id;
+      });
+
+      return ids;
+    },
   },
 
   data: function () {
     return {
+      celularSelecionadoNotificacao: "",
+      exibirModalConsultaRapida: false,
       notifications: [],
       stringFromTimestamp: Formatters.formatStringFromTimestamp,
       menus: {
@@ -182,11 +215,11 @@ export default {
           label: "Cadastros",
           icon: "create",
           children: [
-            { label: "Usuário", icon: "person", route: "/cadUsuario" },
+            { label: "Usuário", icon: "person", route: "/cadastro-usuario" },
             {
               label: "Cliente",
               icon: "person_pin_circle",
-              route: "/cadCliente",
+              route: "/cadastro-cliente",
             },
           ],
         },
@@ -194,11 +227,11 @@ export default {
           label: "Consultas",
           icon: "manage_search",
           children: [
-            { label: "Usuário", icon: "person", route: "/conUsuario" },
+            { label: "Usuário", icon: "person", route: "/consulta-usuarios" },
             {
               label: "Cliente",
               icon: "person_pin_circle",
-              route: "/conCliente",
+              route: "/consulta-clientes",
             },
           ],
         },
@@ -215,12 +248,24 @@ export default {
   },
 
   methods: {
+    clickNotification(notification) {
+      this.celularSelecionadoNotificacao = notification.celular;
+      this.exibirModalConsultaRapida = true;
+
+      let index = this.notifications.indexOf(notification);
+      if (index != null) {
+        this.notifications.splice(index, 1);
+      }
+
+      api.get(`/notification/setAsViewed/${notification.id}`);
+    },
     getNotifications(compare = false) {
       api.get("/notification/status/0").then((response) => {
         if (compare) {
           let newNotifications = [];
-          newNotifications = response.data.map((notification) => {
-            if (!this.notifications.includes(notification)) return notification;
+          newNotifications = response.data.filter((notification) => {
+            if (!this.notificationsIds.includes(notification.id))
+              return notification.id;
           });
 
           if (newNotifications.length > 0) {
@@ -230,7 +275,7 @@ export default {
               msg = `${newNotifications.length} novos clientes se cadastraram!`;
 
             this.$q.notify({
-              type: "positive",
+              type: "info",
               position: "bottom",
               message: msg,
               timeout: 2000,

@@ -96,6 +96,7 @@ module.exports = configure(function (ctx) {
       // Quasar plugins
       plugins: [
         'Notify',
+        'Dialog',
         'LocalStorage',
         'SessionStorage'
       ]
@@ -143,7 +144,7 @@ module.exports = configure(function (ctx) {
 
       manifest: {
         name: `GEC - Gerenciador de Endereços de Clientes`,
-        short_name: `GED`,
+        short_name: `GEC`,
         description: `Control of customer delivery addresses for restaurants`,
         display: 'standalone',
         orientation: 'portrait',

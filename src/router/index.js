@@ -31,7 +31,7 @@ export default route(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    const exceptions = ['/cadastro-cliente'];
+    const exceptions = ['/rafa/cad-cliente'];
 
     if (exceptions.includes(to.path))
     {

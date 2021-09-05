@@ -1,6 +1,6 @@
 <template>
-  <q-card width="100%" flat bordered class="my-card bg-transparent">
-    <q-card-section>
+  <q-card width="100%" flat :bordered="!modoModal" class="my-card bg-white">
+    <q-card-section v-show="!modoModal">
       <div class="row items-center no-wrap">
         <div class="col-12 text-center">
           <div class="text-h6 text-bold">CONSULTA RÁPIDA DE CLIENTE</div>
@@ -74,6 +74,17 @@ import { api } from "boot/axios";
 export default defineComponent({
   name: "ConRapidaCliente",
 
+  props: {
+    celularInicial: {
+      type: String,
+      default: "",
+    },
+    modoModal: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   data: function () {
     return {
       loading: false,
@@ -92,6 +103,11 @@ export default defineComponent({
       },
       nadaEncontrado: false,
     };
+  },
+
+  created() {
+    this.celular = this.celularInicial;
+    this.load();
   },
 
   methods: {

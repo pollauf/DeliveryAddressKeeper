@@ -1,7 +1,12 @@
 <template>
   <q-page class="row">
     <div class="col-12 col-md-6 offset-md-3 q-pt-lg">
-      <CadCliente titulo="CADASTRO" :exibirBannerSucesso="true" :origem="1" />
+      <CadCliente
+        titulo="CADASTRO"
+        :tenantuser="tenantuser"
+        :exibirBannerSucesso="true"
+        :origem="1"
+      />
     </div>
   </q-page>
 </template>
@@ -15,7 +20,13 @@ export default defineComponent({
   name: "cadClienteExt",
 
   data: function () {
-    return {};
+    return {
+      tenantuser: null,
+    };
+  },
+
+  created() {
+    this.tenantuser = this.$route.params.tenantuser;
   },
 
   methods: {},

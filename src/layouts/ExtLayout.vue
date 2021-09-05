@@ -1,19 +1,25 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header bordered class="bg-primary text-white" height-hint="58">
+    <div
+      v-if="showPageContainer"
+      class="text-black"
+      style="background-color: #ffaa1c; width: 100%"
+    >
       <q-toolbar class="non-selectable">
         <q-toolbar-title class="q-pt-sm">
-          <span class="zaikoLogo text-h4">{P}</span>
+          <q-avatar size="3em">
+            <img src="logorafa.png" />
+          </q-avatar>
           <span
-            class="text-subtitle1 text-bold q-ml-sm desktop-only"
+            class="text-subtitle1 text-bold q-ml-sm"
             style="font-family: Helvetica"
           >
-            Nome restaurante
+            Cantinho Paulista da Rafa
           </span>
         </q-toolbar-title>
       </q-toolbar>
-    </q-header>
-    <q-page-container>
+    </div>
+    <q-page-container v-if="showPageContainer">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -26,7 +32,17 @@ export default {
   name: "ExtLayout",
 
   data: function () {
-    return {};
+    return {
+      showPageContainer: false,
+    };
+  },
+
+  created() {
+    let tenantuser = this.$route.params.tenantuser;
+
+    if (tenantuser == "rafa") {
+      this.showPageContainer = true;
+    }
   },
 
   setup() {
