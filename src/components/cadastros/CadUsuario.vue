@@ -1,6 +1,11 @@
 <template>
-  <q-card width="100%" flat bordered class="my-card bg-transparent">
-    <q-card-section>
+  <q-card
+    width="100%"
+    flat
+    :bordered="!modalMode"
+    class="my-card bg-transparent"
+  >
+    <q-card-section v-show="!modalMode">
       <div class="row items-center no-wrap">
         <div class="col-12 text-center">
           <div class="text-h6 text-bold">CADASTRO DE USUÁRIO</div>
@@ -9,7 +14,7 @@
     </q-card-section>
 
     <q-card-section>
-      <q-form ref="form" @submit="onSubmit" class="q-gutter-y-sm row">
+      <q-form ref="form" @submit="onSubmit" class="row q-col-gutter-sm">
         <q-input
           class="col-12 col-md-12"
           outlined
@@ -27,7 +32,8 @@
           :rules="[(val) => (val && val.length >= 4) || 'Preencha o Login!']"
         />
         <q-input
-          class="col-12 col-md-5 offset-md-1"
+          v-if="!modoEdicao"
+          class="col-12 col-md-6"
           outlined
           v-model="model.senha"
           :type="isPwd ? 'password' : 'text'"
@@ -68,6 +74,23 @@ import { api } from "boot/axios";
 export default defineComponent({
   name: "CadUsuario",
 
+  props: {
+    selectedModel: {
+      type: Object,
+      default: null,
+    },
+    modalMode: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  computed: {
+    modoEdicao() {
+      return this.model.id > 0;
+    },
+  },
+
   data: function () {
     return {
       model: {
@@ -83,7 +106,12 @@ export default defineComponent({
   },
 
   created() {
-    this.originalModel = JSON.stringify(this.model);
+    if (this.selectedModel != null) {
+      this.originalModel = JSON.stringify(this.selectedModel);
+      this.model = JSON.parse(this.originalModel);
+    } else {
+      this.originalModel = JSON.stringify(this.model);
+    }
   },
 
   methods: {
@@ -100,7 +128,10 @@ export default defineComponent({
 
         setTimeout(() => {
           if (response.data.ok) {
-            this.model = JSON.parse(this.originalModel);
+            if (!this.modoEdicao) {
+              this.model = JSON.parse(this.originalModel);
+            }
+
             this.$refs.form.resetValidation();
           }
 

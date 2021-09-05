@@ -1,4 +1,21 @@
 <template>
+  <q-dialog v-model="showUserModal" persistent>
+    <q-card style="width: 700px; max-width: 95vw">
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-subtitle1 text-bold">Edição de Usuário</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <CadUsuario
+          style="width: 100%; height: 100%"
+          :selectedModel="selectedRow"
+          :modalMode="true"
+        />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
   <q-page class="row">
     <div class="col-12 col-md-10 offset-md-1 q-pt-lg">
       <q-card width="100%" flat bordered class="my-card bg-transparent">
@@ -21,6 +38,55 @@
             row-key="index"
             :pagination="pagination"
           >
+            <template v-slot:header="props">
+              <q-tr :props="props">
+                <q-th auto-width />
+                <q-th auto-width> Ativo </q-th>
+                <q-th v-for="col in props.cols" :key="col.name" :props="props">
+                  {{ col.label }}
+                </q-th>
+              </q-tr>
+            </template>
+
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td auto-width>
+                  <q-btn-dropdown size="sm" color="primary">
+                    <q-list>
+                      <q-item clickable v-close-popup @click="edit(props.row)">
+                        <q-item-section avatar>
+                          <q-icon color="primary" name="edit" />
+                        </q-item-section>
+                        <q-item-section>
+                          <q-item-label>Editar</q-item-label>
+                        </q-item-section>
+                      </q-item>
+                      <q-item clickable v-close-popup>
+                        <q-item-section avatar>
+                          <q-icon color="primary" name="lock" />
+                        </q-item-section>
+                        <q-item-section>
+                          <q-item-label>Alterar Senha</q-item-label>
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+                  </q-btn-dropdown>
+                </q-td>
+                <q-td>
+                  <q-toggle
+                    v-model="props.row.status"
+                    :true-value="1"
+                    :false-value="0"
+                    @update:model-value="troggleStatus"
+                    color="primary"
+                  />
+                </q-td>
+                <q-td v-for="col in props.cols" :key="col.name" :props="props">
+                  {{ col.value }}
+                </q-td>
+              </q-tr>
+            </template>
+
             <template v-slot:top-right>
               <q-input
                 borderless
@@ -55,16 +121,24 @@
 <script>
 import { defineComponent, ref } from "vue";
 
+import CadUsuario from "src/components/cadastros/CadUsuario.vue";
+
 import { api } from "boot/axios";
 
 export default defineComponent({
   name: "conUsuario",
+
+  components: {
+    CadUsuario,
+  },
 
   data: function () {
     return {
       rows: [],
       loading: false,
       filter: "",
+      showUserModal: false,
+      selectedRow: null,
     };
   },
 
@@ -72,7 +146,23 @@ export default defineComponent({
     this.getRows();
   },
 
+  watch: {
+    showUserModal(statusModal) {
+      // Closed
+      if (!statusModal) {
+        this.getRows();
+      }
+    },
+  },
+
   methods: {
+    edit(row) {
+      this.selectedRow = row;
+      this.showUserModal = true;
+    },
+    troggleStatus(newStatus) {
+      // api.get(`/user/`);
+    },
     getRows() {
       this.loading = true;
 
@@ -82,6 +172,7 @@ export default defineComponent({
 
           this.rows.forEach((row, index) => {
             row.index = index + 1;
+            row.active = row.status == 1;
           });
 
           this.loading = false;
