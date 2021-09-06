@@ -77,7 +77,7 @@
                     v-model="props.row.status"
                     :true-value="1"
                     :false-value="0"
-                    @update:model-value="troggleStatus"
+                    @update:model-value="() => troggleStatus(props.row)"
                     color="primary"
                   />
                 </q-td>
@@ -160,8 +160,8 @@ export default defineComponent({
       this.selectedRow = row;
       this.showUserModal = true;
     },
-    troggleStatus(newStatus) {
-      // api.get(`/user/`);
+    troggleStatus(user) {
+      api.get(`/user/${user.id}/set/status/${user.status}`);
     },
     getRows() {
       this.loading = true;
