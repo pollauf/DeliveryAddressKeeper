@@ -42,7 +42,9 @@ export default defineComponent({
 
   methods: {
     copyRegistryLink() {
-      copyToClipboard(this.registryLink)
+      let message = `Poderia cadastrar seu endereço pelo nosso link? ${this.registryLink}`;
+
+      copyToClipboard(message)
         .then(() => {
           this.$q.notify({
             type: "positive",

@@ -68,17 +68,18 @@
             <q-icon color="primary" name="sticky_note_2" />
           </q-item-section>
           <q-item-section>
-            <q-item-label class="text-subtitle2">
-              Mensagem de Confirmação
-            </q-item-label>
             <q-item-label>
               <q-btn
-                @click="copyConfirmationMessage"
-                outline
-                color="blue-7"
-                no-caps
+                @click="copyCustomerInfo"
+                flat
+                color="transparent"
+                text-color="blue-7"
               >
-                COPIAR
+                Informações
+                <q-icon class="q-pl-sm" name="content_copy" color="blue-7" />
+              </q-btn>
+              <q-btn @click="copyConfirmationMessage" flat color="blue-7">
+                Confirmação
                 <q-icon class="q-pl-sm" name="content_copy" color="blue-7" />
               </q-btn>
             </q-item-label>
@@ -143,6 +144,22 @@ export default defineComponent({
   },
 
   methods: {
+    copyCustomerInfo() {
+      let customerInfo = `Nome: ${this.model.nome}, Celular: ${this.model.celular}, Endereço: ${this.endereco}`;
+
+      copyToClipboard(customerInfo)
+        .then(() => {
+          this.$q.notify({
+            type: "positive",
+            position: "bottom",
+            message: "Copiado",
+            timeout: 550,
+          });
+        })
+        .catch(() => {
+          // catch
+        });
+    },
     copyConfirmationMessage() {
       copyToClipboard(this.confirmationMessage)
         .then(() => {
