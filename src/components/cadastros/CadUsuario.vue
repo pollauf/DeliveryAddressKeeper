@@ -118,26 +118,33 @@ export default defineComponent({
     onSubmit() {
       this.loading = true;
 
-      api.post("/user/register", this.model).then((response) => {
-        this.$q.notify({
-          type: response.data.ok ? "positive" : "negative",
-          position: "bottom",
-          message: response.data.msg,
-          timeout: 2300,
-        });
+      api
+        .post("/user/newregister", this.model)
+        .then((response) => {
+          this.$q.notify({
+            type: response.data.ok ? "positive" : "negative",
+            position: "bottom",
+            message: response.data.msg,
+            timeout: 2300,
+          });
 
-        setTimeout(() => {
-          if (response.data.ok) {
-            if (!this.modoEdicao) {
-              this.model = JSON.parse(this.originalModel);
+          setTimeout(() => {
+            if (response.data.ok) {
+              if (!this.modoEdicao) {
+                this.model = JSON.parse(this.originalModel);
+              }
+
+              this.$refs.form.resetValidation();
             }
 
-            this.$refs.form.resetValidation();
-          }
-
-          this.loading = false;
-        }, 2500);
-      });
+            this.loading = false;
+          }, 2500);
+        })
+        .catch((error) => {
+          setTimeout(() => {
+            this.onSubmit();
+          }, 550);
+        });
     },
   },
 });

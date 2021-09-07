@@ -13,6 +13,7 @@
         <q-input
           :loading="loading"
           class="col-12"
+          type="tel"
           outlined
           v-model="celular"
           label="Celular/WhatsApp"
@@ -61,13 +62,37 @@
             <q-item-label class="text-subtitle1">{{ endereco }}</q-item-label>
           </q-item-section>
         </q-item>
+
+        <q-item>
+          <q-item-section avatar>
+            <q-icon color="primary" name="sticky_note_2" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label class="text-subtitle2">
+              Mensagem de Confirmação
+            </q-item-label>
+            <q-item-label>
+              <q-btn
+                @click="copyConfirmationMessage"
+                outline
+                color="blue-7"
+                no-caps
+              >
+                COPIAR
+                <q-icon class="q-pl-sm" name="content_copy" color="blue-7" />
+              </q-btn>
+            </q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-card-section>
   </q-card>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
+
+import { copyToClipboard } from "quasar";
 
 import { api } from "boot/axios";
 
@@ -89,6 +114,7 @@ export default defineComponent({
     return {
       loading: false,
       celular: "",
+      celularSearch: "",
       model: {
         id: 0,
         nome: "",
@@ -110,9 +136,29 @@ export default defineComponent({
     this.load();
   },
 
+  watch: {
+    celular(newValue) {
+      this.celularSearch = newValue;
+    },
+  },
+
   methods: {
+    copyConfirmationMessage() {
+      copyToClipboard(this.confirmationMessage)
+        .then(() => {
+          this.$q.notify({
+            type: "positive",
+            position: "bottom",
+            message: "Copiado",
+            timeout: 550,
+          });
+        })
+        .catch(() => {
+          // catch
+        });
+    },
     load() {
-      if (this.celular.length < 14) {
+      if (this.celularSearch.length < 14) {
         return;
       }
 
@@ -121,7 +167,7 @@ export default defineComponent({
       this.loading = true;
 
       api
-        .post("/deliverycustomer/from/phone", { phone: this.celular })
+        .post("/deliverycustomer/from/phone", { phone: this.celularSearch })
         .then((response) => {
           setTimeout(() => {
             if (Object.keys(response.data).length > 0) {
@@ -137,18 +183,36 @@ export default defineComponent({
                 estado: response.data.estado,
                 origem: 0,
               };
+
+              this.celular = this.celularSearch;
             } else {
-              this.model.id = 0;
-              this.nadaEncontrado = true;
+              if (this.celularSearch.length == 14) {
+                let celularNewDigit = this.celular.split(" ").join(" 9");
+                this.celularSearch = celularNewDigit;
+                this.load();
+
+                return;
+              } else {
+                this.model.id = 0;
+                this.nadaEncontrado = true;
+              }
             }
 
             this.loading = false;
           }, 500);
+        })
+        .catch((error) => {
+          setTimeout(() => {
+            this.load();
+          }, 550);
         });
     },
   },
 
   computed: {
+    confirmationMessage() {
+      return `O seu endereço é na "${this.endereco}"?`;
+    },
     endereco() {
       let endereco = [];
 

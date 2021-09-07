@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh LpR fFf">
     <q-header bordered class="bg-primary text-white" height-hint="58">
       <q-toolbar class="non-selectable">
         <q-btn
@@ -257,7 +257,7 @@ export default {
         this.notifications.splice(index, 1);
       }
 
-      api.get(`/notification/setAsViewed/${notification.id}`);
+      api.get(`/notification/setasviewed/${notification.id}`);
     },
     getNotifications(compare = false) {
       api.get("/notification/status/0").then((response) => {

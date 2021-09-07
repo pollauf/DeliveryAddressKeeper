@@ -167,16 +167,21 @@ export default defineComponent({
       this.loading = true;
 
       setTimeout(() => {
-        api.get("/users").then((result) => {
-          this.rows = result.data;
+        api
+          .get("/users")
+          .then((result) => {
+            this.rows = result.data;
 
-          this.rows.forEach((row, index) => {
-            row.index = index + 1;
-            row.active = row.status == 1;
+            this.rows.forEach((row, index) => {
+              row.index = index + 1;
+              row.active = row.status == 1;
+            });
+
+            this.loading = false;
+          })
+          .catch((error) => {
+            this.getRows();
           });
-
-          this.loading = false;
-        });
       }, 500);
     },
   },

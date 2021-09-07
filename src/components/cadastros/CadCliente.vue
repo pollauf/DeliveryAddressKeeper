@@ -28,6 +28,7 @@
           class="col-12 col-sm-4"
           outlined
           v-model="model.celular"
+          type="tel"
           label="Celular/WhatsApp"
           :mask="
             model.celular.length > 14 ? '(##) #####-####' : '(##) ####-#####'
@@ -53,6 +54,7 @@
         />
         <q-input
           class="col-12 col-sm-3"
+          type="tel"
           outlined
           v-model="model.numero"
           label="Número"
@@ -168,29 +170,37 @@ export default defineComponent({
     onSubmit() {
       this.loading = true;
 
-      api.post("/deliverycustomer/register", this.model).then((response) => {
-        if (response.data.ok) {
-          if (this.exibirBannerSucesso) {
-            this.bannerSucesso = true;
-          } else {
-            this.$q.notify({
-              type: response.data.ok ? "positive" : "negative",
-              position: "bottom",
-              message: response.data.msg,
-              timeout: 2300,
-            });
-          }
-        }
-
-        setTimeout(() => {
+      api
+        .post("/deliverycustomer/newregister", this.model)
+        .then((response) => {
           if (response.data.ok) {
-            this.model = JSON.parse(this.originalModel);
-            this.$refs.form.resetValidation();
+            if (this.exibirBannerSucesso) {
+              this.bannerSucesso = true;
+              window.scrollTo(0, 0);
+            } else {
+              this.$q.notify({
+                type: response.data.ok ? "positive" : "negative",
+                position: "bottom",
+                message: response.data.msg,
+                timeout: 2300,
+              });
+            }
           }
 
-          this.loading = false;
-        }, 2500);
-      });
+          setTimeout(() => {
+            if (response.data.ok) {
+              this.model = JSON.parse(this.originalModel);
+              this.$refs.form.resetValidation();
+            }
+
+            this.loading = false;
+          }, 2500);
+        })
+        .catch((error) => {
+          setTimeout(() => {
+            this.onSubmit();
+          }, 550);
+        });
     },
   },
 

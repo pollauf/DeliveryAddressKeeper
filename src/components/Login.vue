@@ -76,23 +76,30 @@ export default defineComponent({
     onSubmit() {
       this.loading = true;
 
-      api.post("/auth/login", this.model).then((response) => {
-        this.$q.notify({
-          type: response.data.ok ? "positive" : "warning",
-          position: "bottom",
-          message: response.data.msg,
-          timeout: 2000,
+      api
+        .post("/auth/login", this.model)
+        .then((response) => {
+          this.$q.notify({
+            type: response.data.ok ? "positive" : "warning",
+            position: "bottom",
+            message: response.data.msg,
+            timeout: 2000,
+          });
+
+          setTimeout(() => {
+            if (response.data.ok) {
+              this.$q.localStorage.set("token", response.data.token);
+              this.$router.push({ path: "/" });
+            }
+
+            this.loading = false;
+          }, 550);
+        })
+        .catch((error) => {
+          setTimeout(() => {
+            this.onSubmit();
+          }, 550);
         });
-
-        setTimeout(() => {
-          if (response.data.ok) {
-            this.$q.localStorage.set("token", response.data.token);
-            this.$router.push({ path: "/" });
-          }
-
-          this.loading = false;
-        }, 550);
-      });
     },
   },
 });
