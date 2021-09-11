@@ -1,6 +1,11 @@
 <template>
-  <q-card width="100%" flat bordered class="my-card bg-transparent">
-    <q-card-section>
+  <q-card
+    width="100%"
+    flat
+    :bordered="!modalMode"
+    class="my-card bg-transparent"
+  >
+    <q-card-section v-show="!modalMode">
       <div class="row items-center no-wrap">
         <div class="col-12 text-center">
           <div class="text-h6 text-bold">{{ formTitle }}</div>
@@ -137,6 +142,14 @@ export default defineComponent({
       type: String,
       default: null,
     },
+    selectedModel: {
+      type: Object,
+      default: null,
+    },
+    modalMode: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data: function () {
@@ -153,6 +166,7 @@ export default defineComponent({
         cidade: "Jaraguá do Sul",
         estado: "SC",
         origem: this.origem,
+        status: 1,
       },
       originalModel: "",
       isPwd: true,
@@ -162,7 +176,13 @@ export default defineComponent({
   },
 
   created() {
+    if (this.selectedModel != null) {
+      this.originalModel = JSON.stringify(this.selectedModel);
+      this.model = JSON.parse(this.originalModel);
+    }
+
     this.model.tenant_user = this.tenantuser;
+
     this.originalModel = JSON.stringify(this.model);
   },
 
@@ -173,23 +193,24 @@ export default defineComponent({
       api
         .post("/deliverycustomer/newregister", this.model)
         .then((response) => {
-          if (response.data.ok) {
-            if (this.exibirBannerSucesso) {
-              this.bannerSucesso = true;
-              window.scrollTo(0, 0);
-            } else {
-              this.$q.notify({
-                type: response.data.ok ? "positive" : "negative",
-                position: "bottom",
-                message: response.data.msg,
-                timeout: 2300,
-              });
-            }
+          if (this.exibirBannerSucesso) {
+            this.bannerSucesso = true;
+            window.scrollTo(0, 0);
+          } else {
+            this.$q.notify({
+              type: response.data.ok ? "positive" : "negative",
+              position: "bottom",
+              message: response.data.msg,
+              timeout: 2300,
+            });
           }
 
           setTimeout(() => {
             if (response.data.ok) {
-              this.model = JSON.parse(this.originalModel);
+              if (!this.modoEdicao) {
+                this.model = JSON.parse(this.originalModel);
+              }
+
               this.$refs.form.resetValidation();
             }
 
@@ -211,6 +232,9 @@ export default defineComponent({
       } else {
         return "EDIÇÃO DE CLIENTE";
       }
+    },
+    modoEdicao() {
+      return this.model.id > 0;
     },
   },
 });

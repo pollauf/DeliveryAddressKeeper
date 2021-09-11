@@ -34,7 +34,16 @@
               {{ notificationsLength }}
             </q-badge>
           </template>
-          <q-list class="non-selectable">
+          <q-list v-show="notificationsLength > 0" class="non-selectable">
+            <q-item @click="clearNotifications()" clickable dense v-close-popup>
+              <q-item-section avatar>
+                <q-avatar icon="delete" size="4em" text-color="grey-9" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label> Limpar notificações </q-item-label>
+              </q-item-section>
+            </q-item>
+
             <q-item
               v-for="(notification, key) in notifications"
               :key="key"
@@ -248,6 +257,13 @@ export default {
   },
 
   methods: {
+    clearNotifications() {
+      api.get("/notification/clearall").then((response) => {
+        if (response.ok) {
+          this.notifications = [];
+        }
+      });
+    },
     clickNotification(notification) {
       this.celularSelecionadoNotificacao = notification.celular;
       this.exibirModalConsultaRapida = true;

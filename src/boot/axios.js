@@ -10,8 +10,8 @@ import { LocalStorage } from 'quasar'
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-// let baseURL = 'http://localhost/DeliveryAddressKeeperAPI/public';
-let baseURL = 'https://gec.pollauf.net/api/';
+let baseURL = 'http://localhost/DeliveryAddressKeeperAPI/public';
+// let baseURL = 'https://gec.pollauf.net/api/';
 
 const api = axios.create({ baseURL: baseURL })
 

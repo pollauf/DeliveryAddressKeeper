@@ -2,7 +2,7 @@
   <q-dialog v-model="showUserModal" persistent>
     <q-card style="width: 700px; max-width: 95vw">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-subtitle1 text-bold">Edição de Usuário</div>
+        <div class="text-subtitle1 text-bold">EDIÇÃO DE USUÁRIO</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
