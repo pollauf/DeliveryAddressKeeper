@@ -36,6 +36,13 @@ const routes = [
     ]
   },
   {
+    path: '/:phone/consulta-clientes-ext',
+    component: () => import('layouts/SimpleLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Index.vue') }
+    ]
+  },
+  {
     path: '/:tenantuser/cad-cliente',
     component: () => import('layouts/ExtLayout.vue'),
     children: [

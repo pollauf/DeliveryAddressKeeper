@@ -133,7 +133,45 @@ export default defineComponent({
   },
 
   created() {
-    this.celular = this.celularInicial;
+    let celini = this.celularInicial;
+
+    if (celini != "") {
+      if (celini.length == 10) {
+        celini =
+          "(" +
+          celini[0] +
+          celini[1] +
+          ") " +
+          celini[2] +
+          celini[3] +
+          celini[4] +
+          celini[5] +
+          "-" +
+          celini[6] +
+          celini[7] +
+          celini[8] +
+          celini[9];
+      } else if (celini.length == 11) {
+        celini =
+          "(" +
+          celini[0] +
+          celini[1] +
+          ") " +
+          celini[2] +
+          celini[3] +
+          celini[4] +
+          celini[5] +
+          celini[6] +
+          "-" +
+          celini[7] +
+          celini[8] +
+          celini[9] +
+          celini[10];
+      }
+
+      this.celular = celini;
+    }
+
     this.load();
   },
 

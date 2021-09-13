@@ -17,7 +17,7 @@
           <q-icon class="q-pl-sm" name="content_copy" color="blue-7" />
         </q-btn>
       </div>
-      <ConRapidaCliente />
+      <ConRapidaCliente :celularInicial="celularInicial" />
     </div>
   </q-page>
 </template>
@@ -37,7 +37,16 @@ export default defineComponent({
   data() {
     return {
       registryLink: "https://gec.pollauf.net/rafa/cad-cliente",
+      celularInicial: "",
     };
+  },
+
+  created() {
+    let phone = this.$route.params.phone;
+
+    if (phone != undefined && phone != null) {
+      this.celularInicial = phone;
+    }
   },
 
   methods: {
